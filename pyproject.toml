@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "lld"
+version = "0.1.0"
+description = "LLD (Large Logo Dataset)"
+authors = ["Diwank Singh Tomer <diwank.singh@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.23.1"
+h5py = "^3.7.0"
+datasets = "^2.3.2"
+Pillow = "^9.2.0"
+requests = "^2.28.1"
+bs4 = "^0.0.1"
+html5lib = "^1.1"
+extraction = "^0.3"
+aiohttp = {extras = ["speedups"], version = "^3.8.1"}
+tqdm = "^4.64.0"
+pandas = "^1.4.3"
+tables = "^3.7.0"
+pyarrow = "^8.0.0"
+modin = {extras = ["dask"], version = "^0.15.2"}
+aiostream = "^0.4.4"
+
+[tool.poetry.dev-dependencies]
+ipython = "^8.4.0"
+black = "^22.6.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
