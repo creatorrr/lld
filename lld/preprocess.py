@@ -48,7 +48,7 @@ async def preprocess(batch_size: int = 100, limit: int = samples_count + 1):
 
     processor = gen_processor(batch_size, limit)
 
-    chunk_size = 10
+    chunk_size = 1000
     async with stream.chunks(processor, chunk_size).stream() as chunks:
         async for chunk in chunks:
             df_chunk = pd.DataFrame(chunk, columns=columns)
