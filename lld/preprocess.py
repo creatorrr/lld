@@ -9,18 +9,20 @@ import numpy as np
 import pandas as pd
 from tqdm.asyncio import trange
 
-from .loader import gen_samples, samples_count
+from .loader import datafile_path, gen_samples, samples_count
 from .crawler import run
 
 script_dir = os.path.dirname(__file__)
 outfile_path = os.path.join(script_dir, "../data/lld-processed.h5")
 
 
-async def gen_processor(batch_size: int, limit: int):
+async def gen_processor(
+    batch_size: int, limit: int, datafile_path: str = datafile_path
+):
     count = min(limit, samples_count)
     batch_size = min(limit, batch_size)
 
-    samples = gen_samples()
+    samples = gen_samples(datafile_path=datafile_path)
     steps = count // batch_size
 
     for step in trange(steps):
@@ -42,23 +44,32 @@ async def gen_processor(batch_size: int, limit: int):
             yield data
 
 
-async def preprocess(batch_size: int = 100, limit: int = samples_count + 1):
+async def preprocess(
+    batch_size: int = 100,
+    limit: int = samples_count + 1,
+    datafile_path: str = datafile_path,
+):
 
     columns = ["images", "description", "name"]
 
-    processor = gen_processor(batch_size, limit)
+    processor = gen_processor(batch_size, limit, datafile_path=datafile_path)
 
     chunk_size = 1000
     async with stream.chunks(processor, chunk_size).stream() as chunks:
         async for chunk in chunks:
             df_chunk = pd.DataFrame(chunk, columns=columns)
-            df_chunk.to_hdf(
-                outfile_path, "data", data_columns=columns, mode="a"
-            )
+            df_chunk.to_hdf(outfile_path, "data", data_columns=columns, mode="a")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--datafile_path",
+        help="Path to downloaded archive",
+        type=str,
+        default=datafile_path,
+    )
 
     parser.add_argument(
         "--limit",

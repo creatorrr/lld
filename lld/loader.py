@@ -7,13 +7,15 @@ import numpy as np
 import PIL.Image as Image
 
 script_dir = os.path.dirname(__file__)
-datafile_path = os.path.join(script_dir, "../data/LLD-logo.hdf5")
+datafile_path = os.path.join(script_dir, "../raw/LLD-logo.hdf5")
 
 with h5py.File(datafile_path, "r") as throwaway:
     samples_count: int = len(throwaway["data"])
 
 
-def gen_samples(labels: list[str] = ["data", "meta_data/names"]):
+def gen_samples(
+    labels: list[str] = ["data", "meta_data/names"], datafile_path: str = datafile_path
+):
 
     # open hdf5 file
     with h5py.File(datafile_path, "r") as hdf5_file:
